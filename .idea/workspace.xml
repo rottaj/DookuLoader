@@ -21,18 +21,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc999ca4-508e-4ef8-8f55-37c963da51f5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Cmd/ArgHandler.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Cmd/ArgHandler.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/cs.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/defender_bypass.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Encrypt/RC4Encrypt.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Encrypt/RC4Encrypt.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Dooku.c" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dooku.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Dooku.h" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dooku.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Http.c" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Http.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Http.h" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Http.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cmd/ArgHandler.c" beforeDir="false" afterPath="$PROJECT_DIR$/Cmd/ArgHandler.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +71,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/j4ck/Documents/Projects/DookuLoader",
+    "last_opened_file_path": "/home/j4ck/Documents/Projects/WhomTheShellTolls",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -133,7 +126,7 @@
       <workItem from="1697348536814" duration="15000" />
       <workItem from="1697349450231" duration="996000" />
       <workItem from="1697380627825" duration="1037000" />
-      <workItem from="1697391672711" duration="8294000" />
+      <workItem from="1697391672711" duration="10028000" />
     </task>
     <servers />
   </component>

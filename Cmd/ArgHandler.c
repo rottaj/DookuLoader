@@ -7,6 +7,7 @@
 #include <wchar.h>
 #include <windows.h>
 #include "../Core/Dooku.h"
+#include "../Encrypt/RC4Encrypt.h"
 
 BOOL HandleCommandLineArguments(int argc, wchar_t *argv[]) {
     if (wcscmp(argv[1], L"-url") == 0) {
@@ -22,6 +23,9 @@ BOOL HandleCommandLineArguments(int argc, wchar_t *argv[]) {
     }
     else if (wcscmp(argv[1], L"-encrypt") == 0){
         // Execute encryption function pass filepath(argv[2])
+        if (!RC4Encrypt(argv[2])) {
+            wprintf(L"[!] Failed To Encrypt! \n");
+        }
     }
     else {
         return FALSE;

