@@ -1,7 +1,6 @@
 # DookuLoader
 <div align="center">
-  <img width="185px" src="assets/savage.png" />
-   <h1>DookuLoader</h1>
+  <img width="100%" height="550px" src="assets/savage_banner.jpg" />
    <p><i>DookuLoader is a low level shellcode loader to bypass Windows Defender, created by <a href="https://github.com/rottaj">@rottaj>.</i></p>
    <br/>
 </div>
