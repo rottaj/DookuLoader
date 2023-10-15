@@ -20,7 +20,20 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc999ca4-508e-4ef8-8f55-37c963da51f5" name="Changes" comment="" />
+    <list default="true" id="dc999ca4-508e-4ef8-8f55-37c963da51f5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Cmd/ArgHandler.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Cmd/ArgHandler.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/cs.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/defender_bypass.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Dooku.c" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dooku.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Dooku.h" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dooku.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Http.c" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Http.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Http.h" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Http.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,7 +131,9 @@
       <workItem from="1697334246830" duration="6124000" />
       <workItem from="1697345974906" duration="2542000" />
       <workItem from="1697348536814" duration="15000" />
-      <workItem from="1697349450231" duration="612000" />
+      <workItem from="1697349450231" duration="996000" />
+      <workItem from="1697380627825" duration="1037000" />
+      <workItem from="1697391672711" duration="8294000" />
     </task>
     <servers />
   </component>

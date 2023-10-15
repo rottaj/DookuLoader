@@ -4,21 +4,24 @@
 
 #include <wchar.h>
 #include "Core/Dooku.h"
-
+#include "Cmd/ArgHandler.h"
+#include <stdio.h>
 
 SITH_INSTANCE myInstance = { 0 };
 PSITH_INSTANCE Instance = &myInstance;
 
 
-int wmain() {
-    if (!PleasureOfYouToJoinUs()) {
-        wprintf(L"Anakin in turn disarmed him, severing his hands and holding his sabers at the count's neck. To Dooku's shock, his secret master then told Anakin to kill him.\n");
+int wmain(int argc, wchar_t *argv[]) {
+    if (argc < 3) {
+        // Print Command Line Options
+        wprintf(L"[!] Insufficient Arguments Passed");
         return -1;
     }
-    // Maybe do some random loading idk.
-    if(!WelcomeToTheDarkSide()) {
-        wprintf(L"BLOP!\n");
+    if (!HandleCommandLineArguments(argc, argv)) {
+        wprintf(L"[!] Please Enter Valid Commands");
         return -1;
     }
+
+    getchar();
 }
 

